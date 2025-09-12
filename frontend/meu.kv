@@ -1,0 +1,83 @@
+ScreenManager:
+    CadastroScreen:
+        name: 'cadastro'
+    PontoScreen:
+        name: 'ponto'
+
+<CadastroScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: status_label
+            text: "Cadastro de Trabalhador"
+            font_size: '28sp'
+            size_hint_y: 0.2
+            halign: 'center'
+        Image:
+            id: camera_view
+            size_hint_y: 0.5
+            allow_stretch: True
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.3
+            spacing: 10
+            TextInput:
+                id: input_cpf
+                hint_text: 'Digite o CPF'
+                multiline: False
+                font_size: '20sp'
+            TextInput:
+                id: input_nome
+                hint_text: 'Digite o Nome'
+                multiline: False
+                font_size: '20sp'
+            TextInput:
+                id: input_cargo
+                hint_text: 'Digite o Cargo'
+                multiline: False
+                font_size: '20sp'
+        BoxLayout:
+            size_hint_y: 0.15
+            spacing: 10
+            Button:
+                text: 'Cadastrar'
+                font_size: '22sp'
+                on_press: root.cadastrar_trabalhador()
+            Button:
+                text: 'Ir para Registro de Ponto'
+                font_size: '22sp'
+                on_press: root.manager.current = 'ponto'
+
+<PontoScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: status_label
+            text: 'Registro de Ponto'
+            font_size: '28sp'
+            size_hint_y: 0.2
+            halign: 'center'
+        Image:
+            id: camera_view
+            size_hint_y: 0.5
+            allow_stretch: True
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.3
+            spacing: 10
+            TextInput:
+                id: input_cpf
+                hint_text: 'Digite o CPF'
+                multiline: False
+                font_size: '20sp'
+        BoxLayout:
+            size_hint_y: 0.15
+            spacing: 10
+            Button:
+                text: 'Registrar Ponto'
+                font_size: '22sp'
+                on_press: root.registrar_ponto()
+            Button:
+                text: 'Ir para Cadastro'
+                font_size: '22sp'
+                on_press: root.manager.current = 'cadastro'
