@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Pontos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            color: #444;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        thead {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .entrada {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .saida {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Relatório de Pontos Registrados</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>CPF</th>
+                <th>Nome</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ponto, nome_trabalhador in registros %}
+
+            {% set hora_local = ponto.data_hora | to_br_time %}
+
+            <tr>
+                <td>{{ ponto.cpf }}</td>
+                <td>{{ nome_trabalhador }}</td>
+
+                <td>{{ hora_local.strftime('%d/%m/%Y') }}</td>
+                <td>{{ hora_local.strftime('%H:%M:%S') }}</td>
+
+                <td class="{{ ponto.tipo }}">{{ ponto.tipo.capitalize() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

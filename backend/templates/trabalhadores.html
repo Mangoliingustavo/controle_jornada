@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalhadores Cadastrados</title>
+    <style>
+        /* Estilos gerais (iguais aos anteriores) */
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f9; color: #333; }
+        .navbar { background-color: #333; overflow: hidden; padding: 14px 20px; }
+        .navbar a { float: left; display: block; color: white; text-align: center; padding: 14px 20px; text-decoration: none; }
+        .navbar a:hover { background-color: #ddd; color: black; }
+        .container { padding: 20px; }
+        h1 { color: #444; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        th, td { padding: 12px 15px; border: 1px solid #ddd; text-align: left; }
+        thead { background-color: #28a745; color: #ffffff; }
+        tbody tr:nth-child(even) { background-color: #f2f2f2; }
+        tbody tr:hover { background-color: #e2e6ea; }
+        .no-records { text-align: center; font-style: italic; color: #666; padding: 20px; }
+
+        /* --- NOVOS ESTILOS para botões e modal --- */
+        .actions button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            color: white;
+        }
+        .btn-edit { background-color: #ffc107; } /* Amarelo */
+        .btn-delete { background-color: #dc3545; } /* Vermelho */
+
+        .modal {
+            display: none; /* Oculto por padrão */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 8px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="/relatorio">Relatório de Pontos</a>
+        <a href="/trabalhadores">Trabalhadores Cadastrados</a>
+    </div>
+
+    <div class="container">
+        <h1>Trabalhadores Cadastrados</h1>
+
+        {% if trabalhadores %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>CPF</th>
+                        <th>Nome</th>
+                        <th>Cargo</th>
+                        <th>Ações</th> </tr>
+                </thead>
+                <tbody>
+                    {% for trabalhador in trabalhadores %}
+                    <tr>
+                        <td>{{ trabalhador.cpf }}</td>
+                        <td>{{ trabalhador.nome }}</td>
+                        <td>{{ trabalhador.cargo }}</td>
+                        <td class="actions">
+                            <button class="btn-edit" onclick="openEditModal('{{ trabalhador.id }}', '{{ trabalhador.nome }}', '{{ trabalhador.cargo }}')">Editar</button>
+
+                            <form action="{{ url_for('excluir_trabalhador', trabalhador_id=trabalhador.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este trabalhador?');">
+                                <button type="submit" class="btn-delete">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-records">Nenhum trabalhador cadastrado ainda.</p>
+        {% endif %}
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Editar Trabalhador</h2>
+            <form id="editForm" method="POST">
+                <div class="form-group">
+                    <label for="editNome">Nome:</label>
+                    <input type="text" id="editNome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCargo">Cargo:</label>
+                    <input type="text" id="editCargo" name="cargo" required>
+                </div>
+                <button type="submit" class="actions btn-edit" style="background-color: #007bff;">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Pega os elementos do modal
+        const modal = document.getElementById('editModal');
+        const form = document.getElementById('editForm');
+        const nomeInput = document.getElementById('editNome');
+        const cargoInput = document.getElementById('editCargo');
+
+        // Função para ABRIR o modal e preencher com os dados
+        function openEditModal(id, nome, cargo) {
+            // Define a action do formulário para a rota correta
+            form.action = `/trabalhador/editar/${id}`;
+            // Preenche os campos do formulário
+            nomeInput.value = nome;
+            cargoInput.value = cargo;
+            // Mostra o modal
+            modal.style.display = 'block';
+        }
+
+        // Função para FECHAR o modal
+        function closeEditModal() {
+            modal.style.display = 'none';
+        }
+
+        // Fecha o modal se o usuário clicar fora dele
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeEditModal();
+            }
+        }
+    </script>
+
+</body>
+</html>
